@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Player from "./components/Player";
 
 export default function App() {
-  const [songs, setSongs] = useState([
+  const [songs] = useState([
     {
       title: "Drown",
       artist: "Bring Me The Horizon",
@@ -29,13 +29,27 @@ export default function App() {
       src: "/assets/Laura & Anton - La Vie En Rose.mp3",
     },
   ]);
-
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [nextSongIndex, setNextSongIndex] = useState(currentSongIndex + 1);
 
+  useEffect(() => {
+    setNextSongIndex(() => {
+      if (currentSongIndex + 1 > songs.length - 1) {
+        return 0;
+      } else {
+        return currentSongIndex + 1;
+      }
+    });
+  }, [currentSongIndex]);
+
   return (
     <div className="App">
-      <Player song={songs[currentSongIndex]} nextSong={songs[nextSongIndex]} />
+      <Player
+        currentSongIndex={currentSongIndex}
+        setCurrentSongIndex={setCurrentSongIndex}
+        songs={songs}
+        nextSongIndex={nextSongIndex}
+      />
     </div>
   );
 }
